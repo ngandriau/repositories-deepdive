@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 @PropertySource(name = "defaultPropertySource",
         value = "classpath:${APP_ENV:default}.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories("org.app.domain")
+@EnableJpaRepositories("org.app.dataaccess")
 public class DBConfig
 {
 
@@ -56,6 +56,7 @@ public class DBConfig
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()
     {
 
+        org.hibernate.jpa.HibernatePersistenceProvider hibernate = new org.hibernate.jpa.HibernatePersistenceProvider();
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
         vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));

@@ -6,8 +6,11 @@ targetCompatibility = 1.7
 
 version = '1.0'
 
-ext.springVersion = '3.2.7.RELEASE'
+//ext.springVersion = '3.2.7.RELEASE'
+ext.springVersion = '4.0.3.RELEASE'
+ext.springDataVersion = '1.5.2.RELEASE'
 ext.hibernateVersion = '4.3.5.Final'
+
 
 repositories {
     mavenCentral()
@@ -17,17 +20,17 @@ repositories {
 
 dependencies {
 
+    ext.groovyVersion = '2.2.2'
 
-    compile("org.springframework:spring-orm:$springVersion") {
-        exclude group: 'commons-logging', module: 'commons-logging'
-    }
+    compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
 
-    compile "org.springframework.data:spring-data-jpa:1.5.2.RELEASE"
+
+    compile "org.springframework.data:spring-data-jpa:$springDataVersion"
 
     compile "org.hibernate:hibernate-entitymanager:$hibernateVersion"
 
-    compile "org.codehaus.groovy:groovy-all:2.2.2"
+    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     compile 'ch.qos.logback:logback-classic:1.1.2'
 
