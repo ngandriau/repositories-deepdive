@@ -15,12 +15,12 @@
  */
 package org.app;
 
-import org.app.config.NicoDBConfig;
+import org.app.config.DBConfig;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
 
 
 /**
@@ -31,8 +31,9 @@ public class ApplicationBootstrappingTest
 
 	@Test
 	public void bootstrapsApplication() {
-        AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(NicoDBConfig.class);
+        AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(DBConfig.class);
         Environment env = appCtx.getEnvironment();
-        assertEquals("prop1InLocalProperties", env.getProperty("prop1"));
+
+        assertThat(env.getProperty("project.name"), is("nico-repositories-deeplive"));
 	}
 }

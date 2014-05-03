@@ -20,11 +20,10 @@ import javax.sql.DataSource;
  */
 @Configuration
 @PropertySource(name = "defaultPropertySource",
-        value = {"classpath:${APP_ENV:default}.properties",
-                "classpath:local.properties"})
+        value = "classpath:${APP_ENV:default}.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.domain")
-public class NicoDBConfig
+public class DBConfig
 {
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
