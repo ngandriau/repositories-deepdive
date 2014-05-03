@@ -5,6 +5,7 @@ import org.app.domain.Customer;
 import org.app.domain.EmailAddress;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,7 +49,7 @@ public class CustomerRepositoryIntegrationTest extends AbstractIntegrationTest {
     }
 
     /**
-     * @since Step 2.2
+     * @since Step 2.3
      */
     @Test
     public void savesExistingCustomer() {
@@ -63,5 +64,39 @@ public class CustomerRepositoryIntegrationTest extends AbstractIntegrationTest {
         assertThat(result.getId(), is(notNullValue()));
         assertThat(result.getFirstname(), is("Dave"));
         assertThat(result.getEmailAddress(), is(new EmailAddress("davematthews@dmband.com")));
+    }
+
+    /**
+     * @since Step 2.4
+     */
+    @Test
+    public void findsCustomersByEmailAddress() {
+
+        Customer result = repository.findByEmailAddress(new EmailAddress("dave@dmband.com"));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getFirstname(), is("Dave"));
+        assertThat(result.getLastname(), is("Matthews"));
+    }
+
+    /**
+     * @since Step 3.1
+     */
+    @Test
+    public void findsAllCustomers() {
+
+        Iterable<Customer> customers = repository.findAll();
+        assertThat(customers, is(Matchers.<Customer> iterableWithSize(3)));
+    }
+
+    /**
+     * @since Step 3.2
+     */
+    @Test
+    public void deletesCustomer() {
+
+        repository.delete(1L);
+
+        assertThat(repository.findOne(1L), is(nullValue()));
     }
 }
