@@ -19,7 +19,9 @@ import javax.sql.DataSource;
  * Created by ngandriau on 5/1/14.
  */
 @Configuration
-@PropertySource("classpath:${APP_ENV:default}.properties")
+@PropertySource(name = "defaultPropertySource",
+        value = {"classpath:${APP_ENV:default}.properties",
+                "classpath:local.properties"})
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.domain")
 public class NicoDBConfig
@@ -39,7 +41,8 @@ public class NicoDBConfig
     private Environment env;
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource()
+    {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
@@ -51,7 +54,8 @@ public class NicoDBConfig
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory()
+    {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
@@ -67,7 +71,8 @@ public class NicoDBConfig
     }
 
     @Bean
-    public JpaTransactionManager transactionManager() {
+    public JpaTransactionManager transactionManager()
+    {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
