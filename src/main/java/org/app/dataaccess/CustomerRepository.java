@@ -3,6 +3,7 @@ package org.app.dataaccess;
 import org.app.domain.Customer;
 import org.app.domain.EmailAddress;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.Repository;
 
 /**
@@ -11,7 +12,7 @@ import org.springframework.data.repository.Repository;
  * @author Oliver Gierke
  * @since Step 2
  */
-public interface CustomerRepository extends CrudRepository<Customer, Long>
+public interface CustomerRepository extends PagingAndSortingRepository<Customer, Long>
 {
 
     /**
