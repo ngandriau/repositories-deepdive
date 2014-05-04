@@ -70,6 +70,7 @@ class CustomerRepositorySpec extends AbsRepositorySpec {
     def "delete a customer"() {
         when:
             Customer nicolas = loadNicolasByEmail()
+
             repositories.customerRepo.delete(nicolas)
 
         then:

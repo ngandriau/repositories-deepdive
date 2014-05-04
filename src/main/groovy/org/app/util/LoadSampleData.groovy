@@ -59,7 +59,7 @@ class LoadSampleData {
         Customer john = new Customer(firstname: "John", lastname: "Doe")
         repositories.customerRepo.save([nicolas, john])
 
-        BookOrder order1 = new BookOrder(customer: nicolas, orderedBooks: [springInAction, javaPersistenceWithHibernate])
+        BookOrder order1 = new BookOrder(customer: john, orderedBooks: [springInAction, javaPersistenceWithHibernate])
         repositories.orderRepo.save(order1)
     }
 }

@@ -33,7 +33,7 @@ abstract class AbsRepositorySpec extends Specification {
         ctx = new AnnotationConfigApplicationContext(DbConfig.class);
         repositories = DomainRepositories.getRepositories(ctx)
 
-        delete = new DeleteDomainData(repositories: repositories)
+        delete = new DeleteDomainData(ctx)
         delete.deleteAll()
 
         loadSample = new LoadSampleData(ctx)
