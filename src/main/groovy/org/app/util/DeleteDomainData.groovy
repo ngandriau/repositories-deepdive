@@ -1,9 +1,6 @@
 package org.app.util
 
 import org.app.config.DbConfig
-import org.app.dataaccess.BookRepository
-import org.app.dataaccess.CustomerRepository
-import org.app.dataaccess.OrderRepository
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
@@ -12,15 +9,23 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 class DeleteDomainData {
 
+    DomainRepositories repositories
+
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(DbConfig.class);
 
-        CustomerRepository customerRepo = (CustomerRepository) ctx.getBean("customerRepository");
-        OrderRepository orderRepo = (OrderRepository) ctx.getBean("orderRepository");
-        BookRepository bookRepo = (BookRepository) ctx.getBean("bookRepository");
+        DeleteDomainData app = new DeleteDomainData(repositories: DomainRepositories.getRepositories(ctx))
 
-        orderRepo.deleteAll()
-        customerRepo.deleteAll()
-        bookRepo.deleteAll()
+        app.deleteAll()
     }
+
+    def deleteAll() {
+        repositories.with {
+            orderRepo.deleteAll()
+            customerRepo.deleteAll()
+            bookRepo.deleteAll()
+        }
+    }
+
+
 }

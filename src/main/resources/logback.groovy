@@ -1,10 +1,8 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
 
-def USER_HOME = System.getProperty("user.home");
 
 appender("CONSOLE", ConsoleAppender) {
-    println "USER_HOME is ${USER_HOME}"
 
     encoder(PatternLayoutEncoder) {
         //        Cannot make the mdc work :-)
@@ -37,4 +35,4 @@ root(INFO, ["CONSOLE"])
 // TEST DEBUG
 logger ("org.app.util", DEBUG)
 logger ("org.app.beans", DEBUG)
-logger ("org.app.util.MyEventListener", INFO)
+logger ("org.app.util.GenericProcessEventListener", INFO)

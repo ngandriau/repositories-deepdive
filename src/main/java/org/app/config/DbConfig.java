@@ -1,14 +1,6 @@
 package org.app.config;
 
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.delegate.event.ActivitiEventListener;
-import org.activiti.spring.SpringProcessEngineConfiguration;
-import org.activiti.spring.annotations.AbstractActivitiConfigurer;
 import org.activiti.spring.annotations.EnableActiviti;
-import org.app.beans.BookOrderProcessService;
-import org.app.beans.OrderService;
-import org.app.beans.PrinterBean;
-import org.app.util.MyEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -19,13 +11,10 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
 
 /**
  * Created by ngandriau on 5/1/14.

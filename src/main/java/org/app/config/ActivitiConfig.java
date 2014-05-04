@@ -8,7 +8,7 @@ import org.activiti.spring.annotations.EnableActiviti;
 import org.app.beans.BookOrderProcessService;
 import org.app.beans.OrderService;
 import org.app.beans.PrinterBean;
-import org.app.util.MyEventListener;
+import org.app.util.GenericProcessEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -41,7 +41,7 @@ public class ActivitiConfig
                 engine.setJobExecutorActivate(true);
                 engine.setJpaCloseEntityManager(false);
                 engine.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
-                engine.setEventListeners(Arrays.<ActivitiEventListener>asList( new MyEventListener()));
+                engine.setEventListeners(Arrays.<ActivitiEventListener>asList( new GenericProcessEventListener()));
             }
         };
     }

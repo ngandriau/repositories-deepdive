@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by ngandriau on 5/3/14.
  */
-public class MyEventListener implements ActivitiEventListener
+public class GenericProcessEventListener implements ActivitiEventListener
 {
-    final static Logger log = LoggerFactory.getLogger(MyEventListener.class);
+    final static Logger log = LoggerFactory.getLogger(GenericProcessEventListener.class);
 
     @Override
     public void onEvent(ActivitiEvent event) {

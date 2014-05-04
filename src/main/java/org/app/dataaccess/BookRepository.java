@@ -12,7 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface BookRepository extends PagingAndSortingRepository<Book, Long>
 {
 
-    Customer findByIsbn(String isbn);
+    Book findByIsbn(String isbn);
 
-    Customer findByTitle(String title);
+    Book findByTitle(String title);
 }
