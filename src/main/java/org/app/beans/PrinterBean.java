@@ -5,7 +5,7 @@ package org.app.beans;
  */
 public class PrinterBean
 {
-    public void sayHello(String msg){
-        System.out.println("Hello " + msg!=null?msg:"world");
+    public void print(String msg){
+        System.out.println("" + msg!=null?msg:"No Message to print");
     }
 }

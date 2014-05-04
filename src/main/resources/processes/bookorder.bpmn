@@ -7,7 +7,7 @@
     <userTask id="usertask1" name="Validate By Manager" activiti:async="true" activiti:candidateGroups="sales">
       <documentation>book order user task</documentation>
     </userTask>
-    <serviceTask id="submitOrder" name="Submit Order" activiti:async="true" activiti:expression="${printer.sayHello('Hourra Order Submited')}"></serviceTask>
+    <serviceTask id="submitOrder" name="Submit Order" activiti:async="true" activiti:expression="${printer.print('Hourra Order Submited')}"></serviceTask>
     <sequenceFlow id="sequenceflow3" sourceRef="usertask1" targetRef="exclusivegateway2"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
@@ -18,7 +18,7 @@
     <sequenceFlow id="flow3" name="YES" sourceRef="exclusivegateway2" targetRef="submitOrder">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("OK")}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="rejectOrder" name="Reject Order" activiti:async="true" activiti:expression="${printer.sayHello('Order Rejected :-(')}"></serviceTask>
+    <serviceTask id="rejectOrder" name="Reject Order" activiti:async="true" activiti:expression="${printer.print('Order Rejected :-(')}"></serviceTask>
     <sequenceFlow id="flow4" name="No Need For Approval" sourceRef="exclusivegateway1" targetRef="submitOrder">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("NoApprovalNeeded")}]]></conditionExpression>
     </sequenceFlow>

@@ -6,7 +6,6 @@ import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.activiti.spring.annotations.AbstractActivitiConfigurer;
 import org.activiti.spring.annotations.EnableActiviti;
 import org.app.beans.BookOrderProcessService;
-import org.app.beans.OrderService;
 import org.app.beans.PrinterBean;
 import org.app.util.GenericProcessEventListener;
 import org.springframework.context.annotation.Bean;
@@ -50,9 +49,6 @@ public class ActivitiConfig
     public PrinterBean printer(){
         return new PrinterBean();
     }
-
-    @Bean
-    public OrderService orderService(){return new OrderService();}
 
     @Bean
     public BookOrderProcessService bookOrderProcessService(){return new BookOrderProcessService();}
