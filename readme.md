@@ -26,7 +26,7 @@ This project is my sandbox to play with the following stack of techno:
     *   list of books in order is randomly picked
     *   approval, if necessary, is random
 
-```LOG
+```JAVA
 [DEBUG] o.a.b.BookOrderProcessService -   Missing key book in BD => load sample data
 [INFO ] o.a.b.BookOrderProcessService - deployOrderProcess()
 [INFO ] o.a.e.i.b.d.BpmnDeployer - Processing resource processes/bookorder.bpmn
