@@ -1,5 +1,12 @@
 package org.app.config;
 
+import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.spring.SpringProcessEngineConfiguration;
+import org.activiti.spring.annotations.AbstractActivitiConfigurer;
+import org.activiti.spring.annotations.EnableActiviti;
+import org.app.beans.PrinterBean;
+import org.app.util.MyEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -10,10 +17,14 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ngandriau on 5/1/14.
@@ -23,6 +34,7 @@ import javax.sql.DataSource;
         value = "classpath:${APP_ENV:default}.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.dataaccess")
+@EnableActiviti
 public class DBConfig
 {
 
@@ -76,5 +88,30 @@ public class DBConfig
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
+    }
+
+    @Bean
+    public AbstractActivitiConfigurer abstractActivitiConfigurer(
+            final EntityManagerFactory emf,
+            final PlatformTransactionManager transactionManager) {
+
+        return new AbstractActivitiConfigurer() {
+
+            @Override
+            public void postProcessSpringProcessEngineConfiguration(SpringProcessEngineConfiguration engine) {
+                engine.setTransactionManager(transactionManager);
+                engine.setJpaEntityManagerFactory(emf);
+                engine.setJpaHandleTransaction(false);
+                engine.setJobExecutorActivate(true);
+                engine.setJpaCloseEntityManager(false);
+                engine.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
+                engine.setEventListeners(Arrays.<ActivitiEventListener>asList( new MyEventListener()));
+            }
+        };
+    }
+
+    @Bean
+    public PrinterBean printer(){
+        return new PrinterBean();
     }
 }

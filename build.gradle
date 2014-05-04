@@ -10,6 +10,8 @@ version = '1.0'
 ext.springVersion = '4.0.3.RELEASE'
 ext.springDataVersion = '1.5.2.RELEASE'
 ext.hibernateVersion = '4.3.5.Final'
+ext.activitiVersion = '5.15.1'
+ext.groovyVersion = '2.2.2'
 
 
 repositories {
@@ -20,15 +22,17 @@ repositories {
 
 dependencies {
 
-    ext.groovyVersion = '2.2.2'
+
 
     compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
-
-
     compile "org.springframework.data:spring-data-jpa:$springDataVersion"
 
     compile "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+
+    compile("org.activiti:activiti-spring:$activitiVersion") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
 
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
