@@ -22,11 +22,11 @@ This project is my sandbox to play with the following stack of techno:
 *   clone the repo in direcotry <repo_home>
 *   `#cd <repo_home>`
 *   `./gradlew clean executeBookOrderProcess --daemon`
-*   You should see some trace similar to this.
-    *   but list of book randomly picked
-    *   approval if necessary is random
+*   You should see some trace similar to this, but may vary as:
+    *   list of books in order is randomly picked
+    *   approval, if necessary, is random
 
-```
+```LOG
 [DEBUG] o.a.b.BookOrderProcessService -   Missing key book in BD => load sample data
 [INFO ] o.a.b.BookOrderProcessService - deployOrderProcess()
 [INFO ] o.a.e.i.b.d.BpmnDeployer - Processing resource processes/bookorder.bpmn
