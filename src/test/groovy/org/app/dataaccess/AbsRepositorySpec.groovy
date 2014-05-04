@@ -49,7 +49,6 @@ abstract class AbsRepositorySpec extends Specification {
     }
 
     def cleanupSpec() {
-        log.info "cleanupSpec()"
     }
 
 }

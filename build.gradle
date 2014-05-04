@@ -46,6 +46,31 @@ dependencies {
     testRuntime 'com.h2database:h2:1.3.175'
 }
 
+task executeBookOrderProcess (type: JavaExec){
+    main = 'org.app.util.CreateAndExecuteBookOrderProcess'
+    systemProperty 'APP_ENV', 'h2_profile'
+    classpath = sourceSets.test.runtimeClasspath
+}
+
+test{ // default test use h2 memory db, so no dependencies on the target env
+    systemProperty 'APP_ENV', 'h2_profile'
+}
+
+task testDefEnv( type:Test){ // default env normaly use mysql, which cannot be the default target for test
+    systemProperty 'APP_ENV', 'default'
+}
+
+
+// this is configuration for the output generated during test execution.
+// cf http://forums.gradle.org/gradle/topics/whats_new_in_gradle_1_1_test_logging
+// !!!It has been introduced in gradle 1.1, so update your gradle version if it fails
+tasks.withType(Test) {
+    testLogging {
+        events "passed", "failed", "skipped", "standardOut", "standardError"
+        showExceptions true
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
