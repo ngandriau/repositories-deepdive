@@ -19,10 +19,10 @@ root(INFO, ["CONSOLE"])
 
 
 // Hibernate specific loggers
-logger ("org.hibernate.SQL", DEBUG) //display show jpql queries
-logger ("org.hibernate.type.descriptor.sql.BasicBinder", TRACE) //print bound parameters of the queries.
-logger ("org.hibernate.hql.internal.ast.QueryTranslatorImpl", DEBUG) //print additional info on query.
-logger ("org.hibernate", INFO)
+//logger ("org.hibernate.SQL", DEBUG) //display show jpql queries
+//logger ("org.hibernate.type.descriptor.sql.BasicBinder", TRACE) //print bound parameters of the queries.
+//logger ("org.hibernate.hql.internal.ast.QueryTranslatorImpl", DEBUG) //print additional info on query.
+//logger ("org.hibernate", INFO)
 
 
 // Transaction management
@@ -31,9 +31,10 @@ logger ("org.hibernate", INFO)
 //logger ("org.activiti.engine.impl.cfg.standalone.StandaloneMybatisTransactionContext", DEBUG)
 
 // when activiti use spring transaction manager
-logger ("org.springframework.jdbc.datasource.DataSourceTransactionManager", DEBUG)
+//logger ("org.springframework.jdbc.datasource.DataSourceTransactionManager", DEBUG)
 
 
 // TEST DEBUG
 logger ("org.app.util", DEBUG)
-logger ("org.app.util.MyEventListener", DEBUG)
+logger ("org.app.beans", DEBUG)
+logger ("org.app.util.MyEventListener", INFO)

@@ -6,19 +6,18 @@
     <process id="bookorder" name="bookorder">
         <startEvent id="startevent1" name="Start"/>
 
-        <scriptTask id="scripttask1" name="Validate order" scriptFormat="groovy">
-            <script>
-                out:print "validating order for isbn " + isbn + "\n";
-            </script>
-        </scriptTask>
+        <!--<serviceTask id="newOrder" name="new order" activiti:async="true"-->
+                    <!--activiti:expression="${orderService.newOrder(customerLastname)}" />-->
 
-        <sequenceFlow id="sequenceflow1" name="Validate order" sourceRef="startevent1" targetRef="scripttask1"/>
+        <serviceTask id="newOrder" name="newOrder" activiti:async="true" activiti:expression="${bookOrderProcessService.newOrder(execution, 'GANDRIAU')}" />
+
+        <sequenceFlow id="sequenceflow1" name="Validate order" sourceRef="startevent1" targetRef="newOrder"/>
 
         <userTask id="usertask1" name="Complete order" activiti:candidateGroups="sales">
             <documentation>book order user task</documentation>
         </userTask>
 
-        <sequenceFlow id="sequenceflow2" name="Sending to management" sourceRef="scripttask1" targetRef="usertask1"/>
+        <sequenceFlow id="sequenceflow2" name="Sending to management" sourceRef="newOrder" targetRef="usertask1"/>
 
         <serviceTask id="scripttask2" activiti:async="true"
                      activiti:expression="${printer.sayHello('from scripttask2')}" />
@@ -30,9 +29,17 @@
 
         <sequenceFlow id="sequenceflow4" name="flow" sourceRef="scripttask2" targetRef="scripttask3"/>
 
+        <scriptTask id="dummyEndTask" name="dummyEndTask" scriptFormat="groovy">
+            <script>
+                out:print "dummy end task  for isbn " + isbn + "\n";
+            </script>
+        </scriptTask>
+
+        <sequenceFlow id="sequenceflow_task3_to_dummyEndTask" name="flow" sourceRef="scripttask3" targetRef="dummyEndTask"/>
+
         <endEvent id="endevent1" name="End"/>
 
-        <sequenceFlow id="finalflow" name="flow" sourceRef="scripttask3" targetRef="endevent1"/>
+        <sequenceFlow id="finalflow" name="flow" sourceRef="dummyEndTask" targetRef="endevent1"/>
 
     </process>
 </definitions>

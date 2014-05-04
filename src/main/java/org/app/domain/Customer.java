@@ -27,11 +27,6 @@ import javax.persistence.OneToMany;
 
 import org.springframework.util.Assert;
 
-/**
- * A customer.
- * 
- * @author Oliver Gierke
- */
 @Entity
 public class Customer extends AbstractEntity {
 
@@ -127,4 +122,14 @@ public class Customer extends AbstractEntity {
 	public Set<Address> getAddresses() {
 		return Collections.unmodifiableSet(addresses);
 	}
+
+    @Override
+    public String toString()
+    {
+        return "Customer{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", emailAddress=" + emailAddress +
+                '}';
+    }
 }

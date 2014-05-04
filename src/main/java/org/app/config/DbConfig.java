@@ -5,6 +5,8 @@ import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.activiti.spring.annotations.AbstractActivitiConfigurer;
 import org.activiti.spring.annotations.EnableActiviti;
+import org.app.beans.BookOrderProcessService;
+import org.app.beans.OrderService;
 import org.app.beans.PrinterBean;
 import org.app.util.MyEventListener;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -35,7 +36,7 @@ import java.util.Arrays;
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.dataaccess")
 @EnableActiviti
-public class AppConfig
+public class DbConfig
 {
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
@@ -68,13 +69,13 @@ public class AppConfig
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()
     {
 
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
-        vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));
-        vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL)));
+        HibernateJpaVendorAdapter hibernate = new HibernateJpaVendorAdapter();
+        hibernate.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
+        hibernate.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));
+        hibernate.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL)));
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setJpaVendorAdapter(hibernate);
         factory.setPackagesToScan(env.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
         factory.setDataSource(dataSource());
 
@@ -89,28 +90,4 @@ public class AppConfig
         return transactionManager;
     }
 
-    @Bean
-    public AbstractActivitiConfigurer abstractActivitiConfigurer(
-            final EntityManagerFactory emf,
-            final PlatformTransactionManager transactionManager) {
-
-        return new AbstractActivitiConfigurer() {
-
-            @Override
-            public void postProcessSpringProcessEngineConfiguration(SpringProcessEngineConfiguration engine) {
-                engine.setTransactionManager(transactionManager);
-                engine.setJpaEntityManagerFactory(emf);
-                engine.setJpaHandleTransaction(false);
-                engine.setJobExecutorActivate(true);
-                engine.setJpaCloseEntityManager(false);
-                engine.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
-                engine.setEventListeners(Arrays.<ActivitiEventListener>asList( new MyEventListener()));
-            }
-        };
-    }
-
-    @Bean
-    public PrinterBean printer(){
-        return new PrinterBean();
-    }
 }

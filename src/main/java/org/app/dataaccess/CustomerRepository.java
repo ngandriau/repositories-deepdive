@@ -9,8 +9,6 @@ import org.springframework.data.repository.Repository;
 /**
  * {@link Repository} to access {@link Customer} instances.
  *
- * @author Oliver Gierke
- * @since Step 2
  */
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Long>
 {
@@ -23,4 +21,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
      * @return
      */
     Customer findByEmailAddress(EmailAddress emailAddress);
+
+    Customer findByLastname(String lastname);
 }

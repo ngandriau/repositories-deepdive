@@ -23,26 +23,26 @@ public class MyEventListener implements ActivitiEventListener
             case ENTITY_CREATED:
             {
                 ActivitiEntityEvent theEvent = (ActivitiEntityEvent) event;
-                log.debug("[EVENT] entity created of type: ${theEvent.entity.getClass()}");
+                log.debug("[EVENT] entity created of type: "+theEvent.getEntity().getClass().getCanonicalName());
                 break;
             }
 
             case ACTIVITY_STARTED:
             {
                 ActivitiActivityEvent theEvent = (ActivitiActivityEvent) event;
-                log.debug("[EVENT] activity(${theEvent.activityId}) STARTED : ");
+                log.debug("[EVENT] activity("+theEvent.getActivityId()+") STARTED : ");
                 break;
             }
 
             case ACTIVITY_COMPLETED:
             {
                 ActivitiActivityEvent theEvent = (ActivitiActivityEvent) event;
-                log.debug ("[EVENT] activity(${theEvent.activityId}) COMPLETED : ");
+                log.debug ("[EVENT] activity("+theEvent.getActivityId()+") COMPLETED : ");
                 break;
             }
 
             default:
-                log.debug ("onEvent($event.type) - not yet handled");
+                log.debug ("onEvent("+event.getType()+") - not yet handled");
         }
     }
 
