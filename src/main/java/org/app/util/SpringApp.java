@@ -6,7 +6,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.app.config.DBConfig;
+import org.app.config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -51,7 +51,7 @@ public class SpringApp
     private void initApp()
     {
         log.info ("initApp()");
-        appCtx = new AnnotationConfigApplicationContext(DBConfig.class);
+        appCtx = new AnnotationConfigApplicationContext(AppConfig.class);
     }
 
     void initProcessEngine()

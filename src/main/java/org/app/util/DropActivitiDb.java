@@ -1,13 +1,12 @@
 package org.app.util;
 
-import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.impl.ProcessEngineImpl;
 import org.activiti.engine.impl.db.DbSqlSession;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandConfig;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
-import org.app.config.DBConfig;
+import org.app.config.AppConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class DropActivitiDb
 {
     public static void main(String[] args) {
-        ApplicationContext appCtx = new AnnotationConfigApplicationContext(DBConfig.class);
+        ApplicationContext appCtx = new AnnotationConfigApplicationContext(AppConfig.class);
 
         ProcessEngineImpl processEngine = (ProcessEngineImpl) appCtx.getBean("processEngine");
         CommandExecutor commandExecutor = processEngine.getProcessEngineConfiguration().getCommandExecutor();

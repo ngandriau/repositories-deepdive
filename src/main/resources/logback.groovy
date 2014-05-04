@@ -36,4 +36,4 @@ logger ("org.springframework.jdbc.datasource.DataSourceTransactionManager", DEBU
 
 // TEST DEBUG
 logger ("org.app.util", DEBUG)
-logger ("org.app.util.MyEventListener", INFO)
+logger ("org.app.util.MyEventListener", DEBUG)

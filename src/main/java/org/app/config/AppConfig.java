@@ -35,7 +35,7 @@ import java.util.Arrays;
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.dataaccess")
 @EnableActiviti
-public class DBConfig
+public class AppConfig
 {
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
@@ -68,7 +68,6 @@ public class DBConfig
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()
     {
 
-        org.hibernate.jpa.HibernatePersistenceProvider hibernate = new org.hibernate.jpa.HibernatePersistenceProvider();
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
         vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));

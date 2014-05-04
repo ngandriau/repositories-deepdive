@@ -17,7 +17,7 @@ package org.app;
 
 import javax.sql.DataSource;
 
-import org.app.config.DBConfig;
+import org.app.config.AppConfig;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Abstract integration test to populate the database with dummy data.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DBConfig.class)
+@ContextConfiguration(classes = AppConfig.class)
 @Transactional
 public abstract class AbstractIntegrationTest {
 

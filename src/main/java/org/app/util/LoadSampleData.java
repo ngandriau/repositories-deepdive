@@ -1,6 +1,6 @@
 package org.app.util;
 
-import org.app.config.DBConfig;
+import org.app.config.AppConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -16,7 +16,7 @@ public class LoadSampleData
 {
     public static void main(String[] args)
     {
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(DBConfig.class);
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
         DataSource dataSource = (DataSource) ctx.getBean("dataSource");
 

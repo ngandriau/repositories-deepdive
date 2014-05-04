@@ -15,7 +15,7 @@
  */
 package org.app;
 
-import org.app.config.DBConfig;
+import org.app.config.AppConfig;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -31,7 +31,7 @@ public class ApplicationBootstrappingTest
 
 	@Test
 	public void bootstrapsApplication() {
-        AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(DBConfig.class);
+        AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(AppConfig.class);
         Environment env = appCtx.getEnvironment();
 
         assertThat(env.getProperty("project.name"), is("nico-repositories-deeplive"));
