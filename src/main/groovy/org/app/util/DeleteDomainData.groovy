@@ -14,9 +14,13 @@ class DeleteDomainData {
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(DbConfig.class);
 
-        DeleteDomainData app = new DeleteDomainData(repositories: DomainRepositories.getRepositories(ctx))
+        DeleteDomainData app = new DeleteDomainData(ctx)
 
         app.deleteAll()
+    }
+
+    DeleteDomainData(ApplicationContext ctx) {
+        repositories =  DomainRepositories.getRepositories(ctx)
     }
 
     def deleteAll() {

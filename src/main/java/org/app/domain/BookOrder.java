@@ -1,6 +1,8 @@
 package org.app.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class BookOrder extends AbstractEntity
@@ -10,6 +12,11 @@ public class BookOrder extends AbstractEntity
     @ManyToOne(optional = false)
     private Customer customer;
 
+    /**
+     * An order has not many books, and we will need them most ofthe time, so load them with the order
+     */
+    @ManyToMany(fetch=FetchType.EAGER)
+    private Set<Book> orderedBooks = new HashSet<>();
 
     protected BookOrder(){}
 
@@ -26,6 +33,16 @@ public class BookOrder extends AbstractEntity
     public void setCustomer(Customer customer)
     {
         this.customer = customer;
+    }
+
+    public Set<Book> getOrderedBooks()
+    {
+        return orderedBooks;
+    }
+
+    public void setOrderedBooks(Set<Book> orderedBooks)
+    {
+        this.orderedBooks = orderedBooks;
     }
 
     @Override

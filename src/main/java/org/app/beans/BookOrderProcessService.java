@@ -4,8 +4,10 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.app.dataaccess.BookRepository;
 import org.app.dataaccess.CustomerRepository;
 import org.app.dataaccess.OrderRepository;
+import org.app.domain.Book;
 import org.app.domain.BookOrder;
 import org.app.domain.Customer;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -26,7 +30,9 @@ public class BookOrderProcessService
 {
 
     public static final String CUSTOMER_LASTNAME_PARAM_KEY  = "customerLastname";
-    public static final String ISBN_PARAM_KEY = "isbn";
+    public static final String ISBNS_PARAM_KEY = "isbns";
+    public static final String ORDERID_PARAM_KEY = "orderId";
+    public static final String ACTION_PARAM_KEY = "action";
 
     final static Logger log = LoggerFactory.getLogger(BookOrderProcessService.class);
 
@@ -40,14 +46,17 @@ public class BookOrderProcessService
     private TaskService taskService;
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerRepository customerRepo;
 
     @Autowired
-    OrderRepository orderRepository;
+    OrderRepository orderRepo;
 
-    public BookOrder newOrder(DelegateExecution execution, String customerLastname)
+    @Autowired
+    BookRepository bookRepo;
+
+    public void newOrder(DelegateExecution execution)
     {
-        log.info("newOrder(customerLastname:{})", customerLastname);
+        log.info("newOrder()");
 
         final Map<String, Object> processParams = execution.getVariables();
         for (Map.Entry<String, Object> param : processParams.entrySet())
@@ -55,7 +64,8 @@ public class BookOrderProcessService
             log.debug("  process param[{}]={}", param.getKey(), param.getValue());
         }
 
-        Customer customer = customerRepository.findByLastname((String) processParams.get(CUSTOMER_LASTNAME_PARAM_KEY));
+        final String customerLastname = (String) processParams.get(CUSTOMER_LASTNAME_PARAM_KEY);
+        Customer customer = customerRepo.findByLastname(customerLastname);
 
         if (customer != null)
         {
@@ -63,13 +73,66 @@ public class BookOrderProcessService
         } else
         {
             log.debug("  no customer found with matvhing lastname:{}. create new one.", customerLastname);
-            customer = customerRepository.save(new Customer("???", customerLastname));
+            customer = customerRepo.save(new Customer("???", customerLastname));
         }
 
+        final BookOrder order = new BookOrder(customer);
 
-        BookOrder newOrder =  orderRepository.save(new BookOrder(customer));
+        Collection<String> isbns = getIsbns(execution);
+        for (String isbn : isbns)
+        {
+            log.debug("  add book({}) in order", isbn);
+            Book aBook = bookRepo.findByIsbn(isbn);
+            if(aBook == null){
+                log.warn("  requested book with isbn({}) is not is stock, donnot add it to the order");
+            }else{
+                order.getOrderedBooks().add(aBook);
+            }
+        }
 
-        return newOrder;
+        BookOrder savedOrder =  orderRepo.save(order);
 
+        execution.setVariable(ORDERID_PARAM_KEY, savedOrder.getId());
+
+
+    }
+
+    public void checkForApproval(DelegateExecution execution)
+    {
+        final int maxAmountFoAutoApproval = 75;
+
+        log.info("checkForApproval() - max amount for auto approval = {} ", maxAmountFoAutoApproval);
+
+        BookOrder order = orderRepo.findOne(getOrderId(execution));
+
+        log.debug("  found the order with id({})", getOrderId(execution));
+
+        BigDecimal orderAmout = BigDecimal.ZERO;
+        for (Book book : order.getOrderedBooks())
+        {
+            orderAmout = orderAmout.add(book.getPrice().getValue());
+        }
+
+        log.debug("  order amount = {}", orderAmout);
+
+        if(orderAmout.doubleValue() >= maxAmountFoAutoApproval){
+            log.debug("    order need approval!");
+            execution.setVariable(ACTION_PARAM_KEY, "NeedApproval");
+        }else{
+            log.debug("    order is auto approved.");
+            execution.setVariable(ACTION_PARAM_KEY, "NoApprovalNeeded");
+        }
+    }
+
+    Long getOrderId(DelegateExecution execution){
+        return (Long) execution.getVariable(ORDERID_PARAM_KEY);
+    }
+
+    String getCustomerLastname(DelegateExecution execution){
+        return (String) execution.getVariable(CUSTOMER_LASTNAME_PARAM_KEY);
+    }
+
+    Collection<String> getIsbns(DelegateExecution execution){
+        return (Collection<String>) execution.getVariable(ISBNS_PARAM_KEY);
     }
 }

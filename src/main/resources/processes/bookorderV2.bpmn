@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.bpmnwithactiviti.org">
+  <process id="bookorder" name="bookorder" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <serviceTask id="newBookOrder" name="New Book Order" activiti:async="true" activiti:expression="${bookOrderProcessService.newOrder(execution)}"></serviceTask>
+    <sequenceFlow id="sequenceflow1" sourceRef="startevent1" targetRef="newBookOrder"></sequenceFlow>
+    <userTask id="usertask1" name="Validate By Manager" activiti:async="true" activiti:candidateGroups="sales">
+      <documentation>book order user task</documentation>
+    </userTask>
+    <serviceTask id="submitOrder" name="Submit Order" activiti:async="true" activiti:expression="${printer.sayHello('Hourra Order Submited')}"></serviceTask>
+    <sequenceFlow id="sequenceflow3" sourceRef="usertask1" targetRef="exclusivegateway2"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow1" sourceRef="newBookOrder" targetRef="checkNeedApproval"></sequenceFlow>
+    <serviceTask id="checkNeedApproval" name="Check If Need Approval" activiti:async="true" activiti:expression="${bookOrderProcessService.checkForApproval(execution)}"></serviceTask>
+    <sequenceFlow id="flow2" sourceRef="checkNeedApproval" targetRef="exclusivegateway1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow3" name="YES" sourceRef="exclusivegateway2" targetRef="submitOrder">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("OK")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="rejectOrder" name="Reject Order" activiti:async="true" activiti:expression="${printer.sayHello('Order Rejected :-(')}"></serviceTask>
+    <sequenceFlow id="flow4" name="No Need For Approval" sourceRef="exclusivegateway1" targetRef="submitOrder">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("NoApprovalNeeded")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="usertask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("NeedApproval")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow6" name="NO" sourceRef="exclusivegateway2" targetRef="rejectOrder">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action.equals("NO")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="rejectOrder" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="submitOrder" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_bookorder">
+    <bpmndi:BPMNPlane bpmnElement="bookorder" id="BPMNPlane_bookorder">
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="920.0" y="292.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="292.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="60.0" width="100.0" x="510.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="newBookOrder" id="BPMNShape_newBookOrder">
+        <omgdc:Bounds height="60.0" width="100.0" x="120.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="430.0" y="289.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="checkNeedApproval" id="BPMNShape_checkNeedApproval">
+        <omgdc:Bounds height="55.0" width="105.0" x="276.0" y="282.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="submitOrder" id="BPMNShape_submitOrder">
+        <omgdc:Bounds height="60.0" width="100.0" x="769.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="668.0" y="289.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejectOrder" id="BPMNShape_rejectOrder">
+        <omgdc:Bounds height="55.0" width="105.0" x="636.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sequenceflow1" id="BPMNEdge_sequenceflow1">
+        <omgdi:waypoint x="75.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="120.0" y="310.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sequenceflow3" id="BPMNEdge_sequenceflow3">
+        <omgdi:waypoint x="610.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="668.0" y="309.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="220.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="276.0" y="309.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="381.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="309.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="708.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="769.0" y="310.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="13.0" width="21.0" x="-8.0" y="5.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="450.0" y="329.0"></omgdi:waypoint>
+        <omgdi:waypoint x="450.0" y="422.0"></omgdi:waypoint>
+        <omgdi:waypoint x="819.0" y="422.0"></omgdi:waypoint>
+        <omgdi:waypoint x="819.0" y="340.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="39.0" width="100.0" x="10.0" y="0.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="470.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="310.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="688.0" y="289.0"></omgdi:waypoint>
+        <omgdi:waypoint x="688.0" y="205.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="13.0" width="15.0" x="10.0" y="0.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="741.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="937.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="937.0" y="292.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="869.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="920.0" y="309.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

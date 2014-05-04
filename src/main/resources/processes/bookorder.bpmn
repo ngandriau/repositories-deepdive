@@ -9,7 +9,7 @@
         <!--<serviceTask id="newOrder" name="new order" activiti:async="true"-->
                     <!--activiti:expression="${orderService.newOrder(customerLastname)}" />-->
 
-        <serviceTask id="newOrder" name="newOrder" activiti:async="true" activiti:expression="${bookOrderProcessService.newOrder(execution, 'GANDRIAU')}" />
+        <serviceTask id="newOrder" name="newOrder" activiti:async="true" activiti:expression="${bookOrderProcessService.newOrder(execution)}" />
 
         <sequenceFlow id="sequenceflow1" name="Validate order" sourceRef="startevent1" targetRef="newOrder"/>
 
@@ -31,7 +31,7 @@
 
         <scriptTask id="dummyEndTask" name="dummyEndTask" scriptFormat="groovy">
             <script>
-                out:print "dummy end task  for isbn " + isbn + "\n";
+                out:print "dummy end task  for isbns " + isbns + "\n";
             </script>
         </scriptTask>
 

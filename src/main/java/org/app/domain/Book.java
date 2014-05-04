@@ -7,6 +7,9 @@ public class Book extends AbstractEntity {
 
     private String isbn, title, author;
 
+
+    private AmountVT price;
+
     public Book()
     {
     }
@@ -18,20 +21,44 @@ public class Book extends AbstractEntity {
         this.author = author;
     }
 
-    @Override
-    public boolean equals(Object o)
+    public AmountVT getPrice()
     {
-        if (this == o) return true;
-        if (!(o instanceof Book)) return false;
-        if (!super.equals(o)) return false;
+        return price;
+    }
 
-        Book book = (Book) o;
+    public void setPrice(AmountVT price)
+    {
+        this.price = price;
+    }
 
-        if (author != null ? !author.equals(book.author) : book.author != null) return false;
-        if (!isbn.equals(book.isbn)) return false;
-        if (!title.equals(book.title)) return false;
+    public String getIsbn()
+    {
+        return isbn;
+    }
 
-        return true;
+    public void setIsbn(String isbn)
+    {
+        this.isbn = isbn;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getAuthor()
+    {
+        return author;
+    }
+
+    public void setAuthor(String author)
+    {
+        this.author = author;
     }
 
     @Override
@@ -51,5 +78,21 @@ public class Book extends AbstractEntity {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        if (!super.equals(o)) return false;
+
+        Book book = (Book) o;
+
+        if (author != null ? !author.equals(book.author) : book.author != null) return false;
+        if (!isbn.equals(book.isbn)) return false;
+        if (!title.equals(book.title)) return false;
+
+        return true;
     }
 }

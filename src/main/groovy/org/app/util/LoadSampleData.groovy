@@ -1,7 +1,10 @@
 package org.app.util
 
+import groovy.util.logging.Slf4j
 import org.app.config.DbConfig
+import org.app.domain.AmountVT
 import org.app.domain.Book
+import org.app.domain.BookOrder
 import org.app.domain.Customer
 import org.app.domain.EmailAddress
 import org.springframework.context.ApplicationContext
@@ -12,15 +15,32 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  *
  * Simple main which load some data in db for testing purpose
  */
+
+@Slf4j
 class LoadSampleData {
+    static final String CURRENCY = '$CAD';
+    public static final String SPRING_IN_ACTION_ISBN = "1932394354"
+    public static final String ACTIVITI_IN_ACTION_ISBN = "9781617290121"
+    public static final String JAVA_PERSISTENCE_ISBN = "1-932394-88-5 "
+
     DomainRepositories repositories
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
+        log.info "When launch via \"main\" also delete existing data!"
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(DbConfig.class)
-        def app = new LoadSampleData(ctx)
 
-        app.loadSampleData()
+        log.info "== delete existing data"
+        def deleteApp = new DeleteDomainData(ctx)
+        deleteApp.deleteAll()
+
+        log.info "== load sample data"
+        def loadApp = new LoadSampleData(ctx)
+        loadApp.loadSampleData()
     }
 
     LoadSampleData(ApplicationContext ctx) {
@@ -29,9 +49,9 @@ class LoadSampleData {
 
     void loadSampleData() {
 
-        Book springInAction = new Book(isbn: "1932394354", title: "Spring in Action", author: "Craig Walls")
-        Book activitiInAction = new Book(isbn: "9781617290121", title: "Activiti in Action", author: "Tijs Rademakers")
-        Book javaPersistenceWithHibernate = new Book(isbn: "1-932394-88-5 ", title: "Java Persistence with Hibernate", author: "Christian Bauer")
+        Book springInAction = new Book(isbn: SPRING_IN_ACTION_ISBN, title: "Spring in Action", author: "Craig Walls", price: new AmountVT(CURRENCY, 25.50))
+        Book activitiInAction = new Book(isbn: ACTIVITI_IN_ACTION_ISBN, title: "Activiti in Action", author: "Tijs Rademakers", price: new AmountVT(CURRENCY, 19.25))
+        Book javaPersistenceWithHibernate = new Book(isbn: JAVA_PERSISTENCE_ISBN, title: "Java Persistence with Hibernate", author: "Christian Bauer" , price: new AmountVT(CURRENCY, 57.95))
         repositories.bookRepo.save([springInAction, activitiInAction, javaPersistenceWithHibernate])
 
 
@@ -39,6 +59,7 @@ class LoadSampleData {
         Customer john = new Customer(firstname: "John", lastname: "Doe")
         repositories.customerRepo.save([nicolas, john])
 
-
+        BookOrder order1 = new BookOrder(customer: nicolas, orderedBooks: [springInAction, javaPersistenceWithHibernate])
+        repositories.orderRepo.save(order1)
     }
 }

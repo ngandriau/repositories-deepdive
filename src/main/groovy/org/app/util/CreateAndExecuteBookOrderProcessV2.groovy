@@ -9,14 +9,11 @@ import org.app.config.ActivitiConfig
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
-import static org.app.beans.BookOrderProcessService.CUSTOMER_LASTNAME_PARAM_KEY
-import static org.app.beans.BookOrderProcessService.ISBNS_PARAM_KEY
+import static org.app.beans.BookOrderProcessService.*
+import static org.app.util.LoadSampleData.*
 
-/**
- * Created by ngandriau on 5/4/14.
- */
 @Slf4j
-class CreateAndExecuteBookOrderProcess {
+class CreateAndExecuteBookOrderProcessV2 {
     ApplicationContext appCtx
     ActivitiBeans activiti
     DomainRepositories repositories
@@ -25,7 +22,7 @@ class CreateAndExecuteBookOrderProcess {
         log.info "==== App Startup"
 
 
-        CreateAndExecuteBookOrderProcess app = new CreateAndExecuteBookOrderProcess()
+        CreateAndExecuteBookOrderProcessV2 app = new CreateAndExecuteBookOrderProcessV2()
 
         app.initApp()
 
@@ -76,7 +73,7 @@ class CreateAndExecuteBookOrderProcess {
         log.info "deployOrderProcess()"
         RepositoryService repositoryService = activiti.processEngine.getRepositoryService()
         repositoryService.createDeployment()
-                .addClasspathResource("processes/bookorder.bpmn")
+                .addClasspathResource("processes/bookorderV2.bpmn")
                 .deploy()
     }
 
@@ -84,7 +81,7 @@ class CreateAndExecuteBookOrderProcess {
     {
         log.info "executeNewBookOrderProcess()"
 
-        def variables = [(ISBNS_PARAM_KEY): ["123456"],
+        def variables = [(ISBNS_PARAM_KEY): randomBookSelection(),
                          (CUSTOMER_LASTNAME_PARAM_KEY): "GANDRIAU"]
         
         ProcessInstance processInstance = activiti.runtimeService.startProcessInstanceByKey("bookorder", variables)
@@ -94,6 +91,24 @@ class CreateAndExecuteBookOrderProcess {
         return processInstance
     }
 
+    List<String> randomBookSelection(){
+        def availableBooks = [SPRING_IN_ACTION_ISBN, ACTIVITI_IN_ACTION_ISBN, JAVA_PERSISTENCE_ISBN]
+
+        List<String> selectedBooks = new  ArrayList<>()
+
+        Random r = new Random()
+        r.nextInt(5+1).times {
+            selectedBooks << availableBooks[r.nextInt(availableBooks.size())]
+        }
+
+        selectedBooks
+
+    }
+
+    /**
+     * !!!In that case, we assume that every user task is a validation by manager. <br/>
+     *  So we assume that it need an "action" variable to indicate if it validation is ok or not.
+     */
     void executeEveryUserTask()
     {
         log.info "executeEveryUserTask()"
@@ -106,7 +121,16 @@ class CreateAndExecuteBookOrderProcess {
         for (Task task : tasks)
         {
             log.debug("    complete Task($task.name ) with id($task.id )")
-            taskService.complete(task.id)
+
+            String approvalDecision = "OK"
+            if(Math.random() < 0.5){
+                log.debug "  too bad, validation rejected randomly"
+                approvalDecision = "NO"
+            }else{
+                log.debug "  ok, validation approved randomly"
+            }
+
+            taskService.complete(task.id, [(ACTION_PARAM_KEY): approvalDecision])
         }
     }
 
