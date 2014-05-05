@@ -23,7 +23,6 @@ import javax.persistence.MappedSuperclass;
 /**
  * Base class to derive entity classes from.
  * 
- * @author Oliver Gierke
  */
 @MappedSuperclass
 public class AbstractEntity {

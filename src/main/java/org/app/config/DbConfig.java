@@ -1,5 +1,6 @@
 package org.app.config;
 
+import org.activiti.spring.annotations.EnableActiviti;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -15,26 +16,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-/**
- * Created by ngandriau on 5/1/14.
- */
 @Configuration
 @PropertySource(name = "defaultPropertySource",
         value = "classpath:${APP_ENV:default}.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.dataaccess")
-public class DBConfig
+@EnableActiviti
+public class DbConfig
 {
-
-    private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
-    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
-    private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
-    private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
-
-    private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
-    private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-    private static final String PROPERTY_NAME_HIBERNATE_GENERATE_DDL = "hibernate.generate_ddl";
-    private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 
     @Resource
     private Environment env;
@@ -56,14 +45,13 @@ public class DBConfig
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()
     {
 
-        org.hibernate.jpa.HibernatePersistenceProvider hibernate = new org.hibernate.jpa.HibernatePersistenceProvider();
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
-        vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));
-        vendorAdapter.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL)));
+        HibernateJpaVendorAdapter hibernate = new HibernateJpaVendorAdapter();
+        hibernate.setDatabase(Database.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT)));
+        hibernate.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_GENERATE_DDL)));
+        hibernate.setGenerateDdl(Boolean.valueOf(env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL)));
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setJpaVendorAdapter(hibernate);
         factory.setPackagesToScan(env.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
         factory.setDataSource(dataSource());
 
@@ -77,4 +65,16 @@ public class DBConfig
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
+
+
+    private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
+    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
+    private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
+    private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
+
+    private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
+    private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    private static final String PROPERTY_NAME_HIBERNATE_GENERATE_DDL = "hibernate.generate_ddl";
+    private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
+
 }
