@@ -3,6 +3,7 @@ package org.app.config;
 import org.activiti.spring.annotations.EnableActiviti;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -17,8 +18,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource(name = "defaultPropertySource",
-        value = "classpath:${APP_ENV:default}.properties")
+@Import(BaseConfig.class)
 @EnableTransactionManagement
 @EnableJpaRepositories("org.app.dataaccess")
 @EnableActiviti
