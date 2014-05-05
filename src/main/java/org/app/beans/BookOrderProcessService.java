@@ -20,9 +20,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Created by ngandriau on 5/4/14.
- */
 
 @Service
 @Transactional
@@ -72,7 +69,7 @@ public class BookOrderProcessService
             log.debug("  found a customer with id:{} and matching lastname:{}. Use it", customer.getId(), customer.getLastname());
         } else
         {
-            log.debug("  no customer found with matvhing lastname:{}. create new one.", customerLastname);
+            log.debug("  no customer found with matching lastname:{}. create new one.", customerLastname);
             customer = customerRepo.save(new Customer("???", customerLastname));
         }
 
@@ -93,8 +90,6 @@ public class BookOrderProcessService
         BookOrder savedOrder =  orderRepo.save(order);
 
         execution.setVariable(ORDERID_PARAM_KEY, savedOrder.getId());
-
-
     }
 
     public void checkForApproval(DelegateExecution execution)

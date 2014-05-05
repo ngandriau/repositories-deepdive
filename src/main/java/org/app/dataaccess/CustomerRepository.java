@@ -17,7 +17,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
      * Returns the customer with the given {@link EmailAddress}.
      *
      * @param emailAddress the {@link EmailAddress} to search for.
-     * @since Step 2
      * @return
      */
     Customer findByEmailAddress(EmailAddress emailAddress);

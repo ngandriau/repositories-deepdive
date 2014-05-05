@@ -30,6 +30,4 @@ class DeleteDomainData {
             bookRepo.deleteAll()
         }
     }
-
-
 }

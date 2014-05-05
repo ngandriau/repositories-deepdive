@@ -25,10 +25,6 @@ class LoadSampleData {
 
     DomainRepositories repositories
 
-    /**
-     *
-     * @param args
-     */
     public static void main(String[] args) {
         log.info "When launch via \"main\" also delete existing data!"
 
@@ -49,13 +45,17 @@ class LoadSampleData {
 
     void loadSampleData() {
 
-        Book springInAction = new Book(isbn: SPRING_IN_ACTION_ISBN, title: "Spring in Action", author: "Craig Walls", price: new AmountVT(CURRENCY, 25.50))
-        Book activitiInAction = new Book(isbn: ACTIVITI_IN_ACTION_ISBN, title: "Activiti in Action", author: "Tijs Rademakers", price: new AmountVT(CURRENCY, 19.25))
-        Book javaPersistenceWithHibernate = new Book(isbn: JAVA_PERSISTENCE_ISBN, title: "Java Persistence with Hibernate", author: "Christian Bauer" , price: new AmountVT(CURRENCY, 57.95))
+        Book springInAction = new Book(isbn: SPRING_IN_ACTION_ISBN, title: "Spring in Action",
+                author: "Craig Walls", price: new AmountVT(CURRENCY, 25.50))
+        Book activitiInAction = new Book(isbn: ACTIVITI_IN_ACTION_ISBN, title: "Activiti in Action",
+                author: "Tijs Rademakers", price: new AmountVT(CURRENCY, 19.25))
+        Book javaPersistenceWithHibernate = new Book(isbn: JAVA_PERSISTENCE_ISBN, title: "Java Persistence with Hibernate",
+                author: "Christian Bauer" , price: new AmountVT(CURRENCY, 57.95))
         repositories.bookRepo.save([springInAction, activitiInAction, javaPersistenceWithHibernate])
 
 
-        Customer nicolas = new Customer(firstname: "Nicolas", lastname: "GANDRIAU", emailAddress: new EmailAddress("nicolas@email.com"))
+        Customer nicolas = new Customer(firstname: "Nicolas", lastname: "GANDRIAU",
+                emailAddress: new EmailAddress("nicolas@email.com"))
         Customer john = new Customer(firstname: "John", lastname: "Doe")
         repositories.customerRepo.save([nicolas, john])
 

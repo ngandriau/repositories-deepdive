@@ -10,7 +10,6 @@ import spock.lang.Specification
  */
 class ApplicationBootstrappingSpec extends Specification {
 
-
     def "bootstrap application"(){
         when:
             AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(ActivitiConfig.class)
