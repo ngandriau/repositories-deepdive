@@ -1,4 +1,4 @@
-package org.app.core.config;
+package org.app.config;
 
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.delegate.event.ActivitiEventListener;

@@ -1,6 +1,6 @@
 package org.app
 
-import org.app.core.config.ActivitiConfig
+import org.app.config.ActivitiConfig
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.Environment
 import spock.lang.Specification

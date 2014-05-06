@@ -1,7 +1,7 @@
 package org.app.core.dataaccess
 
 import groovy.util.logging.Slf4j
-import org.app.core.config.DbConfig
+import org.app.config.DbConfig
 import org.app.core.util.LoadSampleData
 import org.app.core.util.DeleteDomainData
 import org.app.core.util.DomainRepositories

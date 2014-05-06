@@ -1,4 +1,4 @@
-package org.app.core.config;
+package org.app.config;
 
 import org.activiti.spring.annotations.EnableActiviti;
 import org.springframework.context.annotation.Bean;

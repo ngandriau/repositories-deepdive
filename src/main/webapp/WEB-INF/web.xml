@@ -41,7 +41,7 @@
         </init-param>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>org.app.core.config.WebConfig</param-value>
+            <param-value>org.app.config.WebConfig</param-value>
         </init-param>
     </servlet>
 

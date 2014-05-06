@@ -6,7 +6,7 @@ import org.activiti.engine.impl.interceptor.Command
 import org.activiti.engine.impl.interceptor.CommandConfig
 import org.activiti.engine.impl.interceptor.CommandContext
 import org.activiti.engine.impl.interceptor.CommandExecutor
-import org.app.core.config.ActivitiConfig
+import org.app.config.ActivitiConfig
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 

@@ -5,7 +5,7 @@ import org.activiti.engine.RepositoryService
 import org.activiti.engine.TaskService
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.task.Task
-import org.app.core.config.ActivitiConfig
+import org.app.config.ActivitiConfig
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 

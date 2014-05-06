@@ -16,14 +16,14 @@ appender("CONSOLE", ConsoleAppender) {
 root(INFO, ["CONSOLE"])
 
 
-// Hibernate specific loggers
+//=== Hibernate specific loggers
 //logger ("org.hibernate.SQL", DEBUG) //display show jpql queries
 //logger ("org.hibernate.type.descriptor.sql.BasicBinder", TRACE) //print bound parameters of the queries.
 //logger ("org.hibernate.hql.internal.ast.QueryTranslatorImpl", DEBUG) //print additional info on query.
 //logger ("org.hibernate", INFO)
 
 
-// Transaction management
+//=== Transaction management
 // when activiti is standalone
 //logger ("org.apache.ibatis.transaction.jdbc.JdbcTransaction", DEBUG)
 //logger ("org.activiti.engine.impl.cfg.standalone.StandaloneMybatisTransactionContext", DEBUG)
@@ -31,6 +31,11 @@ root(INFO, ["CONSOLE"])
 // when activiti use spring transaction manager
 //logger ("org.springframework.jdbc.datasource.DataSourceTransactionManager", DEBUG)
 
+
+//=== REST Call
+
+logger ("org.apache.http.wire",DEBUG)
+//logger ("org.apache.http.headers",DEBUG)
 
 // TEST DEBUG
 logger ("org.app.core.util", DEBUG)

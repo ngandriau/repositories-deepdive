@@ -1,6 +1,6 @@
 package org.app.core.util
 
-import org.app.core.config.DbConfig
+import org.app.config.DbConfig
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 

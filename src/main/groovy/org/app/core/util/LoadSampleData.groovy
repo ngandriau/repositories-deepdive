@@ -1,7 +1,7 @@
 package org.app.core.util
 
 import groovy.util.logging.Slf4j
-import org.app.core.config.DbConfig
+import org.app.config.DbConfig
 import org.app.core.domain.AmountVT
 import org.app.core.domain.Book
 import org.app.core.domain.BookOrder
