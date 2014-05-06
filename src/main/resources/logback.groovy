@@ -33,6 +33,6 @@ root(INFO, ["CONSOLE"])
 
 
 // TEST DEBUG
-logger ("org.app.util", DEBUG)
-logger ("org.app.beans", DEBUG)
-logger ("org.app.util.GenericProcessEventListener", INFO)
+logger ("org.app.core.util", DEBUG)
+logger ("org.app.core.service", DEBUG)
+logger ("org.app.core.util.GenericProcessEventListener", INFO)

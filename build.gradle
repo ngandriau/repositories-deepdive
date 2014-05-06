@@ -49,7 +49,7 @@ dependencies {
 }
 
 task executeBookOrderProcess (type: JavaExec){
-    main = 'org.app.util.CreateAndExecuteBookOrderProcess'
+    main = 'org.app.core.util.CreateAndExecuteBookOrderProcess'
     systemProperty 'APP_ENV', 'h2_profile'
     classpath = sourceSets.test.runtimeClasspath
 }
