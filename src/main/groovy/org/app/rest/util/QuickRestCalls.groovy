@@ -19,7 +19,15 @@ class QuickRestCalls {
     public static void main(String[] args) {
         QuickRestCalls tool = new QuickRestCalls()
 
-        tool.createAnOrder()
+        tool.home()
+//        tool.createAnOrder()
+    }
+
+    void home(){
+        def response = restClient.get(
+                contentType: "application/json",
+                requestContentType: "application/json"
+        )
     }
 
     void createAnOrder() {

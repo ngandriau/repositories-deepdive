@@ -1,5 +1,10 @@
 # Spring Data Repositories - A Deep Dive
 
+*   fix the rest controller to return json
+    *   Idea are: setup a default view resolver for json: http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-ann-responsebody
+    *   check this post also: http://stackoverflow.com/questions/5375071/spring-mvc-force-a-controller-to-produce-mappingjacksonjsonviews
+
+
 I should change this project name.
 
 *   I started it from  the [repositories-deepdive from Oliver Gierke](https://github.com/olivergierke/repositories-deepdive)
