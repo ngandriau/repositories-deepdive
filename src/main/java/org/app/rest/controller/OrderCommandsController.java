@@ -45,6 +45,16 @@ public class OrderCommandsController {
     @Autowired
     BookRepository bookRepo;
 
+    @RequestMapping(value="/test2")
+    @ResponseBody()
+    OrderR helloWorld2() {
+        OrderR orderR = new OrderR();
+        orderR.setId(12345l);
+
+//        return new ModelAndView("jsonView", "order", orderR);
+        return orderR;
+    }
+
     @RequestMapping(value="/test", consumes="application/json", produces = "application/json")
     @ResponseBody()
     ResponseEntity<OrderR> helloWorld() {

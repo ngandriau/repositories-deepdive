@@ -25,7 +25,7 @@ class QuickRestCalls {
 
     void home(){
         def response = restClient.get(
-                path:"/mycomp/orders/test",
+                path:"/mycomp/orders/test2",
         )
     }
 
