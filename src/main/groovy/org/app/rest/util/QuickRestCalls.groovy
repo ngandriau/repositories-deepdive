@@ -25,8 +25,7 @@ class QuickRestCalls {
 
     void home(){
         def response = restClient.get(
-                contentType: "application/json",
-                requestContentType: "application/json"
+                path:"/mycomp/orders/test",
         )
     }
 

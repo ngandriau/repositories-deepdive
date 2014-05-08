@@ -17,13 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/mycomp/orders")
-public class OrderCommandsController
-{
+public class OrderCommandsController {
     private static Logger LOG = LoggerFactory.getLogger(OrderCommandsController.class);
+
 
     @Autowired
     private ProcessEngine processEngine;
@@ -43,19 +45,20 @@ public class OrderCommandsController
     @Autowired
     BookRepository bookRepo;
 
-    @RequestMapping("/")
-            @ResponseBody()
+    @RequestMapping(value="/test", consumes="application/json", produces = "application/json")
+    @ResponseBody()
     ResponseEntity<OrderR> helloWorld() {
         OrderR orderR = new OrderR();
         orderR.setId(12345l);
+
+//        return new ModelAndView("jsonView", "order", orderR);
         return new ResponseEntity<OrderR>(orderR, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.POST,
-            consumes= MediaType.APPLICATION_JSON_VALUE,
-            produces =MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<OrderR> createOrder(@RequestBody OrderR orderR, UriComponentsBuilder builder)
-    {
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OrderR> createOrder(@RequestBody OrderR orderR, UriComponentsBuilder builder) {
 
         Customer newCustomerD = new Customer("John", "Doe");
         BookOrder newBookOrderD = new BookOrder(newCustomerD);
