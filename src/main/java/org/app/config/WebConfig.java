@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Initial setup inspired by: http://www.luckyryan.com/2013/02/07/migrate-spring-mvc-servlet-xml-to-java-config/
+ * Initial setup inspired by: https://spring.io/blog/2013/05/11/content-negotiation-using-spring-mvc
  */
 @Configuration
 @EnableWebMvc

@@ -21,9 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
 @RestController
 @RequestMapping("/mycomp/orders")
-public class OrderCommandsController {
+public class OrderCommandsController
+{
     private static Logger LOG = LoggerFactory.getLogger(OrderCommandsController.class);
 
 
@@ -45,45 +47,49 @@ public class OrderCommandsController {
     @Autowired
     BookRepository bookRepo;
 
-    @RequestMapping(value="/test2")
+
+
+    // =======================
+
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody()
-    OrderR helloWorld2() {
-        OrderR orderR = new OrderR();
-        orderR.setId(12345l);
-
-//        return new ModelAndView("jsonView", "order", orderR);
-        return orderR;
-    }
-
-    @RequestMapping(value="/test", consumes="application/json", produces = "application/json")
-    @ResponseBody()
-    ResponseEntity<OrderR> helloWorld() {
-        OrderR orderR = new OrderR();
-        orderR.setId(12345l);
-
-//        return new ModelAndView("jsonView", "order", orderR);
-        return new ResponseEntity<OrderR>(orderR, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderR> createOrder(@RequestBody OrderR orderR, UriComponentsBuilder builder) {
+    public OrderR createOrder(@RequestBody OrderR orderR)
+    {
 
         Customer newCustomerD = new Customer("John", "Doe");
         BookOrder newBookOrderD = new BookOrder(newCustomerD);
-        newCustomerD = customerRepo.save(newCustomerD);
+        customerRepo.save(newCustomerD);
         newBookOrderD = orderRepo.save(newBookOrderD);
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/mycomp/orders/{id}")
-                        .buildAndExpand(newBookOrderD.getId().toString()).toUri()
-        );
-
         orderR.setId(newBookOrderD.getId());
 
-        return new ResponseEntity<OrderR>(orderR, headers, HttpStatus.CREATED);
+        return orderR;
     }
+
+    /**
+     * TODO:  check this format of resource. <br/>
+     * In this case, we can set tje location of the new resource in the response header...
+     *
+     */
+//    @RequestMapping(method = RequestMethod.POST,
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<OrderR> createOrder(@RequestBody OrderR orderR, UriComponentsBuilder builder)
+//    {
+//
+//        Customer newCustomerD = new Customer("John", "Doe");
+//        BookOrder newBookOrderD = new BookOrder(newCustomerD);
+//        newCustomerD = customerRepo.save(newCustomerD);
+//        newBookOrderD = orderRepo.save(newBookOrderD);
+//
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(
+//                builder.path("/mycomp/orders/{id}")
+//                        .buildAndExpand(newBookOrderD.getId().toString()).toUri()
+//        );
+//
+//        orderR.setId(newBookOrderD.getId());
+//
+//        return new ResponseEntity<OrderR>(orderR, headers, HttpStatus.CREATED);
+//    }
 }

@@ -19,13 +19,24 @@ class QuickRestCalls {
     public static void main(String[] args) {
         QuickRestCalls tool = new QuickRestCalls()
 
-        tool.home()
-//        tool.createAnOrder()
+        try {
+            tool.getOrder(123)
+        } catch (e) {
+            log.error("ex:", e)
+        }
+
+        try {
+            tool.createAnOrder()
+        } catch (e) {
+            log.error("ex:", e)
+        }
     }
 
-    void home(){
+    void getOrder(Long id){
         def response = restClient.get(
-                path:"/mycomp/orders/test2",
+                path: "$BASE_URI/orders/$id",
+                contentType: ContentType.JSON,
+                requestContentType: ContentType.JSON
         )
     }
 

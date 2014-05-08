@@ -32,7 +32,7 @@ root(INFO, ["CONSOLE"])
 //logger ("org.springframework.jdbc.datasource.DataSourceTransactionManager", DEBUG)
 
 
-logger ("org.springframework",DEBUG)
+//logger ("org.springframework",DEBUG)
 
 //=== REST Call
 
