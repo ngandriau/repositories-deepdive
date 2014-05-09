@@ -6,6 +6,7 @@ import org.activiti.engine.TaskService
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.task.Task
 import org.app.config.ActivitiConfig
+import org.app.config.WebAppManager
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
@@ -73,7 +74,7 @@ class CreateAndExecuteBookOrderProcess {
         log.info "deployOrderProcess()"
         RepositoryService repositoryService = activiti.processEngine.getRepositoryService()
         repositoryService.createDeployment()
-                .addClasspathResource("processes/bookorder.bpmn")
+                .addClasspathResource(WebAppManager.PROCESSES_BOOKORDER_BPMN)
                 .deploy()
     }
 

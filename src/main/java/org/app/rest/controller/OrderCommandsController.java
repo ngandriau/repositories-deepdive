@@ -53,6 +53,8 @@ public class OrderCommandsController
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody()
+    @ResponseStatus( HttpStatus.CREATED )
+
     public OrderR createOrder(@RequestBody OrderR orderR)
     {
 

@@ -40,6 +40,7 @@ logger ("org.apache.http.wire",DEBUG)
 //logger ("org.apache.http.headers",DEBUG)
 
 // TEST DEBUG
+logger ("org.app.core.config", DEBUG)
 logger ("org.app.core.util", DEBUG)
 logger ("org.app.core.service", DEBUG)
 logger ("org.app.core.util.GenericProcessEventListener", INFO)

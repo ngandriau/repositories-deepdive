@@ -1,8 +1,6 @@
 package org.app.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -16,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 @EnableTransactionManagement
 @Import(ActivitiConfig.class)
-@ComponentScan(basePackages = {"org.app.rest.controller"})
+@ComponentScan(basePackages = {"org.app.rest.controller", "org.app.config"})
 public class WebConfig extends WebMvcConfigurerAdapter
 {
 
@@ -29,5 +27,11 @@ public class WebConfig extends WebMvcConfigurerAdapter
                 useJaf(false).
                 defaultContentType(MediaType.APPLICATION_JSON).
                 mediaType("json", MediaType.APPLICATION_JSON);
+    }
+
+    @Bean()
+    @Lazy(false)
+    public WebAppManager webAppManager(){
+        return new WebAppManager();
     }
 }
