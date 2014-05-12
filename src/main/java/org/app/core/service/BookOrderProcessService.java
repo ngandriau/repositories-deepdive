@@ -99,7 +99,7 @@ public class BookOrderProcessService
 
     public void checkForApproval(DelegateExecution execution)
     {
-        final int maxAmountFoAutoApproval = 1; //TMP for testing purpose
+        final int maxAmountFoAutoApproval = 55;
 
         log.info("checkForApproval() - max amount for auto approval = {} ", maxAmountFoAutoApproval);
 
