@@ -20,13 +20,15 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
+import static org.app.api.OrderStatus.*;
+
 
 @Service
 @Transactional
 public class BookOrderProcessService
 {
 
-    public static final String CUSTOMER_LASTNAME_PARAM_KEY  = "customerLastname";
+    public static final String CUSTOMER_LASTNAME_PARAM_KEY = "customerLastname";
     public static final String ISBNS_PARAM_KEY = "isbns";
     public static final String ORDERID_PARAM_KEY = "orderId";
     public static final String ACTION_PARAM_KEY = "action";
@@ -80,21 +82,24 @@ public class BookOrderProcessService
         {
             log.debug("  add book({}) in order", isbn);
             Book aBook = bookRepo.findByIsbn(isbn);
-            if(aBook == null){
+            if (aBook == null)
+            {
                 log.warn("  requested book with isbn({}) is not is stock, donnot add it to the order");
-            }else{
+            } else
+            {
                 order.getOrderedBooks().add(aBook);
             }
         }
 
-        BookOrder savedOrder =  orderRepo.save(order);
+        order.setStatus(created);
+        BookOrder savedOrder = orderRepo.save(order);
 
         execution.setVariable(ORDERID_PARAM_KEY, savedOrder.getId());
     }
 
     public void checkForApproval(DelegateExecution execution)
     {
-        final int maxAmountFoAutoApproval = 75;
+        final int maxAmountFoAutoApproval = 1; //TMP for testing purpose
 
         log.info("checkForApproval() - max amount for auto approval = {} ", maxAmountFoAutoApproval);
 
@@ -110,24 +115,69 @@ public class BookOrderProcessService
 
         log.debug("  order amount = {}", orderAmout);
 
-        if(orderAmout.doubleValue() >= maxAmountFoAutoApproval){
+        if (orderAmout.doubleValue() >= maxAmountFoAutoApproval)
+        {
             log.debug("    order need approval!");
             execution.setVariable(ACTION_PARAM_KEY, "NeedApproval");
-        }else{
+        } else
+        {
             log.debug("    order is auto approved.");
             execution.setVariable(ACTION_PARAM_KEY, "NoApprovalNeeded");
         }
+
+        order.setStatus(needApprovalChecked);
+        orderRepo.save(order);
     }
 
-    Long getOrderId(DelegateExecution execution){
+    Long getOrderId(DelegateExecution execution)
+    {
         return (Long) execution.getVariable(ORDERID_PARAM_KEY);
     }
 
-    String getCustomerLastname(DelegateExecution execution){
+    String getCustomerLastname(DelegateExecution execution)
+    {
         return (String) execution.getVariable(CUSTOMER_LASTNAME_PARAM_KEY);
     }
 
-    Collection<String> getIsbns(DelegateExecution execution){
+    Collection<String> getIsbns(DelegateExecution execution)
+    {
         return (Collection<String>) execution.getVariable(ISBNS_PARAM_KEY);
+    }
+
+    public void recordManagerValidationDecision(Long orderId, boolean approved, String reason)
+    {
+
+        log.info("recordManagerValidationDecision() - approved:{} ", approved);
+
+        BookOrder order = orderRepo.findOne(orderId);
+
+        //TODO: record the approval decision and reason
+
+        order.setStatus(validated);
+        orderRepo.save(order);
+    }
+
+    public void rejectOrder(DelegateExecution execution)
+    {
+
+        log.info("rejectOrder()");
+
+        BookOrder order = orderRepo.findOne(getOrderId(execution));
+
+
+        order.setStatus(rejected);
+        orderRepo.save(order);
+    }
+
+    public void submitOrder(DelegateExecution execution)
+    {
+
+        log.info("submitOrder()");
+
+        BookOrder order = orderRepo.findOne(getOrderId(execution));
+
+
+        order.setStatus(submited);
+        orderRepo.save(order);
     }
 }

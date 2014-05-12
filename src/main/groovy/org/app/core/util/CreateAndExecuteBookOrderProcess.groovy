@@ -5,8 +5,10 @@ import org.activiti.engine.RepositoryService
 import org.activiti.engine.TaskService
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.task.Task
+import org.apache.commons.lang3.StringUtils
 import org.app.config.ActivitiConfig
 import org.app.config.WebAppManager
+import org.app.core.service.BookOrderProcessService
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
@@ -18,6 +20,7 @@ class CreateAndExecuteBookOrderProcess {
     ApplicationContext appCtx
     ActivitiBeans activiti
     DomainRepositories repositories
+    BookOrderProcessService bookOrderProcessService
 
     public static void main(String[] args) {
         log.info "==== App Startup"
@@ -30,8 +33,7 @@ class CreateAndExecuteBookOrderProcess {
         app.deployOrderProcess()
 
         List<ProcessInstance> activeProcesses = app.queryActiveProcesses()
-        if (activeProcesses.isEmpty())
-        {
+        if (activeProcesses.isEmpty()) {
             app.executeNewBookOrderProcess()
             app.waitForAUserTask()
         }
@@ -49,8 +51,7 @@ class CreateAndExecuteBookOrderProcess {
     /**
      * Load spring context and get the processEngine
      */
-    void initApp()
-    {
+    void initApp() {
         log.info "initApp()"
 
         appCtx = new AnnotationConfigApplicationContext(ActivitiConfig.class)
@@ -58,18 +59,19 @@ class CreateAndExecuteBookOrderProcess {
         activiti = ActivitiBeans.getBeans(appCtx)
         repositories = DomainRepositories.getRepositories(appCtx)
 
+        bookOrderProcessService = appCtx.getBean("bookOrderProcessService");
 
-        if(repositories.bookRepo.findByTitle("Spring in Action") == null){
+
+        if (repositories.bookRepo.findByTitle("Spring in Action") == null) {
             log.debug "  Missing key book in BD => load sample data"
             LoadSampleData loadTool = new LoadSampleData(appCtx)
             loadTool.loadSampleData()
-        }else{
+        } else {
             log.debug "  key book in store, no need to loadsample data"
         }
     }
 
-    void deployOrderProcess()
-    {
+    void deployOrderProcess() {
 
         log.info "deployOrderProcess()"
         RepositoryService repositoryService = activiti.processEngine.getRepositoryService()
@@ -78,27 +80,26 @@ class CreateAndExecuteBookOrderProcess {
                 .deploy()
     }
 
-    ProcessInstance executeNewBookOrderProcess()
-    {
+    ProcessInstance executeNewBookOrderProcess() {
         log.info "executeNewBookOrderProcess()"
 
-        def variables = [(ISBNS_PARAM_KEY): randomBookSelection(),
+        def variables = [(ISBNS_PARAM_KEY)            : randomBookSelection(),
                          (CUSTOMER_LASTNAME_PARAM_KEY): "GANDRIAU"]
-        
+
         ProcessInstance processInstance = activiti.runtimeService.startProcessInstanceByKey("bookorder", variables)
 
-        log.debug"  new proc started with id: $processInstance.id - from proc def:$processInstance.processDefinitionId" 
+        log.debug "  new proc started with id: $processInstance.id - from proc def:$processInstance.processDefinitionId"
 
         return processInstance
     }
 
-    List<String> randomBookSelection(){
+    List<String> randomBookSelection() {
         def availableBooks = [SPRING_IN_ACTION_ISBN, ACTIVITI_IN_ACTION_ISBN, JAVA_PERSISTENCE_ISBN]
 
-        List<String> selectedBooks = new  ArrayList<>()
+        List<String> selectedBooks = new ArrayList<>()
 
         Random r = new Random()
-        r.nextInt(5+1).times {
+        r.nextInt(5 + 1).times {
             selectedBooks << availableBooks[r.nextInt(availableBooks.size())]
         }
 
@@ -110,8 +111,7 @@ class CreateAndExecuteBookOrderProcess {
      * !!!In that case, we assume that every user task is a validation by manager. <br/>
      *  So we assume that it need an "action" variable to indicate if it validation is ok or not.
      */
-    void executeEveryUserTask()
-    {
+    void executeEveryUserTask() {
         log.info "executeEveryUserTask()"
 
         TaskService taskService = activiti.processEngine.getTaskService()
@@ -119,16 +119,27 @@ class CreateAndExecuteBookOrderProcess {
 
         log.debug("  found [${tasks.size()}] waiting user tasks. Complete them all:")
 
-        for (Task task : tasks)
-        {
+        for (Task task : tasks) {
             log.debug("    complete Task($task.name ) with id($task.id )")
 
             String approvalDecision = "OK"
-            if(Math.random() < 0.5){
+            if (Math.random() < 0.5) {
                 log.debug "  too bad, validation rejected randomly"
                 approvalDecision = "NO"
-            }else{
+            } else {
                 log.debug "  ok, validation approved randomly"
+            }
+
+            try {
+                Long orderId = activiti.runtimeService.getVariable(task.executionId, ORDERID_PARAM_KEY);
+                if (orderId == null) {
+                    log.error "cannot find the order of the current user task??? cannot record user decision :-("
+                } else {
+                    bookOrderProcessService.recordManagerValidationDecision(orderId,
+                            StringUtils.equals("OK", approvalDecision), "random decision")
+                }
+            } catch (e) {
+                log.error "ex while recording user decision", e
             }
 
             taskService.complete(task.id, [(ACTION_PARAM_KEY): approvalDecision])
@@ -136,29 +147,24 @@ class CreateAndExecuteBookOrderProcess {
     }
 
 
-    void waitEndOfAnyProc()
-    {
-        log.info"waitEndOfAnyProc()"
-        
+    void waitEndOfAnyProc() {
+        log.info "waitEndOfAnyProc()"
+
         List<ProcessInstance> activeProcesses = queryActiveProcesses()
-        while (!activeProcesses.isEmpty())
-        {
+        while (!activeProcesses.isEmpty()) {
             log.debug("  found " + activeProcesses.size() + " active proc, wait...")
-            try
-            {
+            try {
                 Thread.sleep(200)
-            } catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 log.warn("Ex while sleeping to wait end of process... Just move on", e)
             }
             activeProcesses = queryActiveProcesses()
         }
     }
 
-    List<ProcessInstance> queryActiveProcesses()
-    {
-        log.info"queryActiveProcesses()"
-        
+    List<ProcessInstance> queryActiveProcesses() {
+        log.info "queryActiveProcesses()"
+
         List<ProcessInstance> processes = activiti.runtimeService.createProcessInstanceQuery().processDefinitionKey("bookorder").list()
         log.debug("found {} active processes", processes.size())
         return processes
@@ -167,39 +173,33 @@ class CreateAndExecuteBookOrderProcess {
     /**
      * Wait for the availability of a user task
      */
-    void waitForAUserTask()
-    {
+    void waitForAUserTask() {
         log.info "waitForAUserTask()"
 
         boolean gotOne = false
         int repeat = 0
         int maxRepeat = 10
 
-        while (!gotOne && repeat < maxRepeat)
-        {
+        while (!gotOne && repeat < maxRepeat) {
             TaskService taskService = activiti.processEngine.getTaskService()
             List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("sales").list()
 
             log.debug("  found [${tasks.size()}] waiting user tasks.")
 
-            if (tasks.size() > 0)
-            {
+            if (tasks.size() > 0) {
                 gotOne = true
-            } else
-            {
-                try
-                {
+            } else {
+                try {
                     Thread.sleep(100)
-                } catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     log.warn("InterruptedException!!! - move on", e)
                 }
                 repeat++
             }
         }
 
-        if(repeat >= maxRepeat){
-            log.warn"  wait for a user task failed after $maxRepeat repeat"
+        if (repeat >= maxRepeat) {
+            log.warn "  wait for a user task failed after $maxRepeat repeat"
         }
     }
 }

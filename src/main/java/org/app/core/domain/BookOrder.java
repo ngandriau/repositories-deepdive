@@ -1,6 +1,9 @@
 package org.app.core.domain;
 
+import org.app.api.OrderStatus;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +20,18 @@ public class BookOrder extends AbstractEntity
      */
     @ManyToMany(fetch=FetchType.EAGER)
     private Set<Book> orderedBooks = new HashSet<>();
+
+    @Temporal (TemporalType.TIMESTAMP)
+    @Column(updatable = false)
+    private Date creationDate = new Date();
+
+    @Temporal (TemporalType.TIME)
+    @Column(updatable = false)
+    private Date creationTime = new Date();
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.initial;
+
 
     protected BookOrder(){}
 
@@ -45,12 +60,24 @@ public class BookOrder extends AbstractEntity
         this.orderedBooks = orderedBooks;
     }
 
-    @Override
-    public String toString()
+    public Date getCreationDate()
     {
-        return "Order{" +
-                "customer=" + customer +
-                '}';
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate)
+    {
+        this.creationDate = creationDate;
+    }
+
+    public OrderStatus getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status)
+    {
+        this.status = status;
     }
 
     @Override
@@ -60,9 +87,13 @@ public class BookOrder extends AbstractEntity
         if (!(o instanceof BookOrder)) return false;
         if (!super.equals(o)) return false;
 
-        BookOrder order = (BookOrder) o;
+        BookOrder bookOrder = (BookOrder) o;
 
-        if (!customer.equals(order.customer)) return false;
+        if (!creationDate.equals(bookOrder.creationDate)) return false;
+        if (!customer.equals(bookOrder.customer)) return false;
+        if (orderedBooks != null ? !orderedBooks.equals(bookOrder.orderedBooks) : bookOrder.orderedBooks != null)
+            return false;
+        if (status != bookOrder.status) return false;
 
         return true;
     }
@@ -72,6 +103,9 @@ public class BookOrder extends AbstractEntity
     {
         int result = super.hashCode();
         result = 31 * result + customer.hashCode();
+        result = 31 * result + (orderedBooks != null ? orderedBooks.hashCode() : 0);
+        result = 31 * result + creationDate.hashCode();
+        result = 31 * result + status.hashCode();
         return result;
     }
 }
