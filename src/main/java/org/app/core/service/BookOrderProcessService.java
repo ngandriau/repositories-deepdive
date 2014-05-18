@@ -99,23 +99,20 @@ public class BookOrderProcessService
 
     public void checkForApproval(DelegateExecution execution)
     {
-        final int maxAmountFoAutoApproval = 55;
+        //todo: make it a configurable property
+        final int maxAmountForAutoApproval = 55;
 
-        log.info("checkForApproval() - max amount for auto approval = {} ", maxAmountFoAutoApproval);
+        log.info("checkForApproval() - max amount for auto approval = {} ", maxAmountForAutoApproval);
 
         BookOrder order = orderRepo.findOne(getOrderId(execution));
 
         log.debug("  found the order with id({})", getOrderId(execution));
 
-        BigDecimal orderAmout = BigDecimal.ZERO;
-        for (Book book : order.getOrderedBooks())
-        {
-            orderAmout = orderAmout.add(book.getPrice().getValue());
-        }
+        BigDecimal orderAmout = order.getTotalAmount();
 
         log.debug("  order amount = {}", orderAmout);
 
-        if (orderAmout.doubleValue() >= maxAmountFoAutoApproval)
+        if (orderAmout.doubleValue() >= maxAmountForAutoApproval)
         {
             log.debug("    order need approval!");
             execution.setVariable(ACTION_PARAM_KEY, "NeedApproval");

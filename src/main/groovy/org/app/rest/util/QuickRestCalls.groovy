@@ -20,6 +20,12 @@ class QuickRestCalls {
         QuickRestCalls tool = new QuickRestCalls()
 
         try {
+            tool.getEveryOrders()
+        } catch (e) {
+            log.error("ex:", e)
+        }
+
+        try {
             tool.getOrder(123)
         } catch (e) {
             log.error("ex:", e)
@@ -30,6 +36,14 @@ class QuickRestCalls {
         } catch (e) {
             log.error("ex:", e)
         }
+    }
+
+    void getEveryOrders(){
+        def response = restClient.get(
+                path: "$BASE_URI/orders",
+                contentType: ContentType.JSON,
+                requestContentType: ContentType.JSON
+        )
     }
 
     void getOrder(Long id){

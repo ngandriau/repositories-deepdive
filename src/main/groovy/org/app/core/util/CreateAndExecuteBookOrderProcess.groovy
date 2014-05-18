@@ -32,6 +32,10 @@ class CreateAndExecuteBookOrderProcess {
 
         app.deployOrderProcess()
 
+//        Uncomment to create order, but not going to the end of the process
+//        app.executeNewBookOrderProcess()
+//        if(true) return;
+
         List<ProcessInstance> activeProcesses = app.queryActiveProcesses()
         if (activeProcesses.isEmpty()) {
             app.executeNewBookOrderProcess()

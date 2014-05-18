@@ -1,15 +1,24 @@
 package org.app.rest.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 public class OrderR
 {
+    private Long id;
+    private String status;
+
     private Date dateTimeOfSubmission;
 
-    private List<String> isbns;
+    private String customerFirstname;
+    private String customerLastname;
 
-    private Long id;
+    private BigDecimal amount;
+
+    private List<BookR> books;
+
+    private boolean needConfirmation = false;
 
     public Date getDateTimeOfSubmission()
     {
@@ -21,14 +30,14 @@ public class OrderR
         this.dateTimeOfSubmission = dateTimeOfSubmission;
     }
 
-    public List<String> getIsbns()
+    public List<BookR> getBooks()
     {
-        return isbns;
+        return books;
     }
 
-    public void setIsbns(List<String> isbns)
+    public void setBooks(List<BookR> books)
     {
-        this.isbns = isbns;
+        this.books = books;
     }
 
     public Long getId()
@@ -41,6 +50,66 @@ public class OrderR
         this.id = id;
     }
 
+    public OrderR()
+    {
+    }
+
+    public OrderR(Date dateTimeOfSubmission, Long id)
+    {
+        this.dateTimeOfSubmission = dateTimeOfSubmission;
+        this.id = id;
+    }
+
+    public String getCustomerFirstname()
+    {
+        return customerFirstname;
+    }
+
+    public void setCustomerFirstname(String customerFirstname)
+    {
+        this.customerFirstname = customerFirstname;
+    }
+
+    public String getCustomerLastname()
+    {
+        return customerLastname;
+    }
+
+    public void setCustomerLastname(String customerLastname)
+    {
+        this.customerLastname = customerLastname;
+    }
+
+    public BigDecimal getAmount()
+    {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount)
+    {
+        this.amount = amount;
+    }
+
+    public boolean isNeedConfirmation()
+    {
+        return needConfirmation;
+    }
+
+    public void setNeedConfirmation(boolean needConfirmation)
+    {
+        this.needConfirmation = needConfirmation;
+    }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -51,7 +120,7 @@ public class OrderR
 
         if (!dateTimeOfSubmission.equals(orderR.dateTimeOfSubmission)) return false;
         if (!id.equals(orderR.id)) return false;
-        if (isbns != null ? !isbns.equals(orderR.isbns) : orderR.isbns != null) return false;
+        if (books != null ? !books.equals(orderR.books) : orderR.books != null) return false;
 
         return true;
     }
@@ -60,7 +129,7 @@ public class OrderR
     public int hashCode()
     {
         int result = dateTimeOfSubmission.hashCode();
-        result = 31 * result + (isbns != null ? isbns.hashCode() : 0);
+        result = 31 * result + (books != null ? books.hashCode() : 0);
         result = 31 * result + id.hashCode();
         return result;
     }
@@ -70,7 +139,7 @@ public class OrderR
     {
         return "OrderR{" +
                 "dateTimeOfSubmission=" + dateTimeOfSubmission +
-                ", isbns=" + isbns +
+                ", books=" + books +
                 ", id=" + id +
                 '}';
     }

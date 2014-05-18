@@ -3,6 +3,7 @@ package org.app.core.domain;
 import org.app.api.OrderStatus;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,6 +79,16 @@ public class BookOrder extends AbstractEntity
     public void setStatus(OrderStatus status)
     {
         this.status = status;
+    }
+
+    // TODO: Should belong to BookOrderService, instead of Persistent POJO
+    public BigDecimal getTotalAmount(){
+        BigDecimal orderAmount = BigDecimal.ZERO;
+        for (Book book : getOrderedBooks())
+        {
+            orderAmount = orderAmount.add(book.getPrice().getValue());
+        }
+        return orderAmount;
     }
 
     @Override
